@@ -31,8 +31,7 @@ uniqSU() {
 
 #Phonic.
 phonic(){
-	paste -d "" onlyE_fw.txt onlyD_fw.txt > phonictmp.txt #Pasting the two separate files of English and Devanagari with a delimiter of no space.
-	cat phonictmp.txt | perl -CSD -Mutf8 -pe 's/(?<=[अ-ह\p{M}])(?=[^अ-ह\p{M}])|(?<=[^अ-ह\p{M}])(?=[अ-ह])/ /g' > phonic.txt #Using Perl with a regex expression to leave space for before and after of Devanagari text
+	cat temp.txt | perl -CSD -Mutf8 -pe 's/(?<=[अ-ह\p{M}])(?=[^अ-ह\p{M}])|(?<=[^अ-ह\p{M}])(?=[अ-ह])/ /g' > phonic.txt #Using Perl with a regex expression to leave space for before and after of Devanagari text
 }
 
 #Combining all the text files in a CSV file.
