@@ -32,6 +32,7 @@ uniqSU() {
 #Phonic.
 phonic(){
 	cat res/temp.txt | perl -CSD -Mutf8 -pe 's/(?<=[अ-ह\p{M}])(?=[^अ-ह\p{M}])|(?<=[^अ-ह\p{M}])(?=[अ-ह])/ /g' > phonic.txt #Using Perl with a regex expression to leave space for before and after of Devanagari text
+#p{M} ->char other than devanagari give space.	
 }
 
 #Combining all the text files in a CSV file.
