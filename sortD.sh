@@ -32,12 +32,17 @@ uniqSU() {
 #Phonic.
 phonic(){
 	cat res/temp.txt | perl -CSD -Mutf8 -pe 's/(?<=[अ-ह\p{M}])(?=[^अ-ह\p{M}])|(?<=[^अ-ह\p{M}])(?=[अ-ह])/ /g' > phonic.txt #Using Perl with a regex expression to leave space for before and after of Devanagari text
-#p{M} ->char other than devanagari give space.	
 }
 
 #Combining all the text files in a CSV file.
 fpaste(){
-	paste first_word.txt res/second_rest.txt onlyE_fw.txt onlyD_fw.txt ENuniqSU.txt phonic.txt > all.csv #Pasting the single files together to get one CSV file
+	paste first_word.txt phonic.txt > all.tsv #Pasting the single files together to get one TSV file
+}
+
+#Converting and comparing the file between first two columns.
+comp(){
+	dos2unix all.tsv #Converting the file (dos2unix must be installed)
+	awk -F"[\t]" '{print $0, ($1==$2?_:"\t"$2)}' all.tsv > allcc.tsv #Comparing the two columns and appending the changed into the new column.
 }
 
 printf "separate files exists? (Y/n): " && read yorno
@@ -47,13 +52,15 @@ if [ "$yorno" = n ] ; then #If loop in case there are different files or if they
 #	uniqawK $1 && #This function is called to sort and unique using awk.
 	uniqSU $1 && #This function is called to Sort and unique.
 	phonic $1 && #This function is called to get phonic.
-	fpaste #And finally this function helps in get a single CSV file with all columns.
+	fpaste #This function helps in get a single TSV file with all columns.
+	comp #Converting and comparing the file between first two columns
 else
 	awkkDE $1 && #This function is called to separating English and Devanagari.
 #	uniqawK $1 && #This function is called to sort and unique using awk.
 	uniqSU $1 && #This function is called to Sort and unique.
 	phonic $1 && #This function is called to get phonic.
-	fpaste #And finally this function helps in get a single CSV file with all columns.
+	fpaste #This function helps in get a single TSV file with all columns.
+	comp #Converting and comparing the file between first two columns
 fi
 
 exit 0
